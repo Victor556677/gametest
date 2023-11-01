@@ -2,97 +2,52 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
-
-
-
-
-
-
-public class EnemyTerritory : MonoBehaviour
+public class vijand : MonoBehaviour
 {
-    public BoxCollider territory;
-    GameObject player;
-    bool playerInTerritory;
+    [SerializeField]
+    private int damage = 5;
+    [SerializeField]
+    private float speed = 1.5f;
+    [SerializeField]
+    private hoihoi data;
+    private GameObject player;
 
-    public GameObject enemy;
-    BasicEnemy basicenemy;
-
-    // Use this for initialization
+    // Start is called before the first frame update
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
-        basicenemy = enemy.GetComponent<BasicEnemy>();
-        playerInTerritory = false;
+        SetEnemyValues();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (playerInTerritory == true)
-        {
-            basicenemy.MoveToPlayer();
-        }
-
-        if (playerInTerritory == false)
-        {
-            basicenemy.Rest();
-        }
+        Swarm();
     }
 
-    void OnTriggerEnter(Collider other)
+    private void SetEnemyValues()
     {
-        if (other.gameObject == player)
+        GetComponent<Health>().SetHealth(data.hp, data.hp);
+        damage = data.damage;
+        speed = data.speed;
+    }
+
+    private void Swarm()
+    {
+        transform.position = Vector3.MoveTowards(transform.position, player.transform.position, speed * Time.deltaTime);
+    }
+
+    private void OnTriggerEnter(Collider collider)
+    {
+        if (collider.CompareTag("Player"))
         {
-            playerInTerritory = true;
-        }
-    }
-
-    void OnTriggerExit(Collider other)
-    {
-        if (other.gameObject == player)
-        {
-            playerInTerritory = false;
-        }
-    }
-}
-
-public class BasicEnemy : MonoBehaviour
-{
-    public Transform target;
-    public float speed = 7f;
-    public float attack1Range = 100f;
-    public int attack1Damage = 1;
-    public float timeBetweenAttacks;
-
-
-    // Use this for initialization
-    void Start()
-    {
-        Rest();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
-    public void MoveToPlayer()
-    {
-        //rotate to look at player
-        transform.LookAt(target.position);
-        transform.Rotate(new Vector3(0, -90, 0), Space.Self);
-
-        //move towards player
-        if (Vector3.Distance(transform.position, target.position) > attack1Range)
-        {
-            transform.Translate(new Vector3(speed * Time.deltaTime, 0, 0));
+            if(collider.GetComponent<Health>() != null)
+            {
+                collider.GetComponent<Health>().Damage(damage);
+                this.GetComponent<Health>().Damage(10);
+            }
         }
     }
 
-    public void Rest()
-    {
 
-    }
 }

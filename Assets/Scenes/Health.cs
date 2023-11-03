@@ -32,6 +32,13 @@ public class Health : MonoBehaviour
             throw new System.ArgumentOutOfRangeException("geen negatieve damage");
         }
         this.health -= amount;
+
+
+        if(health <= 0)
+        {
+            Die();
+        }
+
     }
     public void Heal(int amount)
     {
@@ -39,7 +46,19 @@ public class Health : MonoBehaviour
         {
             throw new System.ArgumentOutOfRangeException("geen negatieve heal ");
         }
-        this.health += amount;
+        
+        if(health + amount > MAX_HEALTH)
+        {
+            this.health = MAX_HEALTH;
+        }
+        else
+        {
+            this.health += amount;
+        }
     }
-
+    private void Die()
+    {
+        Debug.Log("dood");
+        Destroy(gameObject);
+    }
 }

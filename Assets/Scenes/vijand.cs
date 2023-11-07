@@ -44,7 +44,7 @@ public class vijand : MonoBehaviour
             if(collider.GetComponent<Health>() != null)
             {
                 collider.GetComponent<Health>().Damage(damage);
-                this.GetComponent<Health>().Damage(10);
+                this.GetComponent<Health>().Damage(1);
             }
         }
     }
